@@ -37,10 +37,20 @@ interface DashboardData {
 export class App implements OnInit {
   private readonly STORAGE_KEY = 'kpi-dashboard-data';
   
-  currentView: 'dashboard' | 'intro' = 'dashboard';
+  currentView: 'dashboard' | 'company' | 'contact' = 'dashboard';
   isEditMode = false;
   showDataModal = false;
   activeTab = 'gai';
+  
+  contactForm = {
+    name: '',
+    department: '',
+    email: '',
+    consultationType: '',
+    content: ''
+  };
+  formSubmitted = false;
+  formError = '';
   
   editData: DashboardData = this.getDefaultData();
   
@@ -400,5 +410,44 @@ export class App implements OnInit {
 
   getTotalAmountRatio(): number {
     return Math.round((this.getTotalContractedAmount() / this.getTotalAmount()) * 1000) / 10;
+  }
+
+  submitContactForm(): void {
+    this.formError = '';
+    
+    if (!this.contactForm.name.trim()) {
+      this.formError = '氏名を入力してください';
+      return;
+    }
+    if (!this.contactForm.department.trim()) {
+      this.formError = '部署を入力してください';
+      return;
+    }
+    if (!this.contactForm.email.trim()) {
+      this.formError = 'メールアドレスを入力してください';
+      return;
+    }
+    if (!this.contactForm.consultationType) {
+      this.formError = '相談種別を選択してください';
+      return;
+    }
+    if (!this.contactForm.content.trim()) {
+      this.formError = '相談内容を入力してください';
+      return;
+    }
+
+    this.formSubmitted = true;
+  }
+
+  resetContactForm(): void {
+    this.contactForm = {
+      name: '',
+      department: '',
+      email: '',
+      consultationType: '',
+      content: ''
+    };
+    this.formSubmitted = false;
+    this.formError = '';
   }
 }

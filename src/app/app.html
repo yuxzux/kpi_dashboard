@@ -6,7 +6,8 @@
     </div>
     <nav class="header-nav">
       <button [class.active]="currentView === 'dashboard'" (click)="currentView = 'dashboard'">ダッシュボード</button>
-      <button [class.active]="currentView === 'intro'" (click)="currentView = 'intro'">LLM-CoE紹介</button>
+      <button [class.active]="currentView === 'company'" (click)="currentView = 'company'">会社紹介</button>
+      <button [class.active]="currentView === 'contact'" (click)="currentView = 'contact'; resetContactForm()">相談窓口</button>
     </nav>
     <button class="data-manage-btn" (click)="openDataModal()" *ngIf="currentView === 'dashboard'">データ管理</button>
   </header>
@@ -249,129 +250,218 @@
     <p>最終更新: 2025年12月</p>
   </footer>
 
-  <!-- LLM-CoE Intro Page -->
-  <div class="intro-page" *ngIf="currentView === 'intro'">
-    <section class="intro-hero">
-      <div class="intro-hero-content">
-        <h2>LLM活用をリードする<br>日本総研のバーチャル組織</h2>
-        <p class="intro-subtitle">LLM-CoE（Center of Excellence）</p>
-        <div class="intro-company">株式会社日本総合研究所</div>
+  <!-- Company Introduction Page -->
+  <div class="company-page" *ngIf="currentView === 'company'">
+    <section class="company-hero">
+      <div class="company-hero-content">
+        <h2>私たちについて</h2>
+        <p class="company-tagline">テクノロジーで、未来を創る</p>
       </div>
     </section>
 
-    <section class="intro-section intro-about">
-      <div class="intro-container">
-        <p class="intro-text">
-          LLM（大規模言語モデル）がもたらす影響は未知数であり、多くの企業では積極的な活用を推進しつつも、その用途は限定的になっているところもあるのではないでしょうか。
-        </p>
-        <p class="intro-text">
-          日本総研では組織横断型のバーチャル組織「LLM-CoE」を立ち上げ、生成AIに関する様々な取り組みを行っています。日進月歩である生成AIについて、日々の情報収集、発信からグループ内におけるPoC（概念実証）支援まで幅広く活動しています。
+    <section class="company-section company-mission">
+      <div class="company-container">
+        <h3 class="section-title">ミッション</h3>
+        <p class="mission-text">
+          私たちは、最先端のAI技術を活用し、お客様のビジネス変革を支援します。
+          デジタルトランスフォーメーションを通じて、持続可能な社会の実現に貢献することを使命としています。
         </p>
       </div>
     </section>
 
-    <section class="intro-section">
-      <div class="intro-container">
-        <h3 class="intro-section-title">LLM-CoEの4つのミッション</h3>
-        <div class="missions-grid">
-          <div class="mission-card">
-            <div class="mission-icon">📡</div>
-            <h4>情報収集・調査<br>情報発信</h4>
-            <p>生成AIに関する最新情報をキャッチし、「LLM Dojo」コミュニティを通じてグループ全体へ展開</p>
+    <section class="company-section company-values">
+      <div class="company-container">
+        <h3 class="section-title">バリュー</h3>
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <h4>イノベーション</h4>
+            <p>常に新しい技術と手法を探求し、革新的なソリューションを提供します</p>
           </div>
-          <div class="mission-card">
-            <div class="mission-icon">🎓</div>
-            <h4>技術者の育成<br>学習・検証環境の整備</h4>
-            <p>勉強会やハンズオン講習会の実施、APIを使えるPoC環境の提供</p>
+          <div class="value-card">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h4>チームワーク</h4>
+            <p>多様な専門性を持つメンバーが協力し、最高の成果を生み出します</p>
           </div>
-          <div class="mission-card">
-            <div class="mission-icon">💬</div>
-            <h4>相談窓口対応</h4>
-            <p>生成AI活用に関する企画段階からの相談対応、適切な部署への橋渡し</p>
+          <div class="value-card">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <h4>品質</h4>
+            <p>妥協のない品質基準で、信頼性の高いサービスを提供します</p>
           </div>
-          <div class="mission-card">
-            <div class="mission-icon">🚀</div>
-            <h4>PoC支援・推進</h4>
-            <p>システム開発への活用検討、レガシーシステムのモダナイゼーション支援</p>
+          <div class="value-card">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            <h4>スピード</h4>
+            <p>迅速な対応と効率的な実行で、ビジネスの成長を加速させます</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="intro-section intro-members">
-      <div class="intro-container">
-        <h3 class="intro-section-title">LLM-CoEメンバー</h3>
-        <div class="members-grid">
-          <div class="member-card">
-            <h4>北野 健太</h4>
-            <p class="member-role">全体推進リーダー / システム企画部</p>
-            <p>2006年入社。先端技術ラボの立ち上げメンバーとして参画し、AIやブロックチェーンなどのリサーチ業務に従事。現在はLLM-CoEの立ち上げから体制構築といった組織全体の運営を担当。</p>
-          </div>
-          <div class="member-card">
-            <h4>西脇 一尊</h4>
-            <p class="member-role">事務局・人材育成・情報発信担当 / 先端技術ラボ</p>
-            <p>2018年入社。機械学習×バイオインフォマティクスの研究経験を持ち、自然言語処理を専門に技術検証・調査に携わる。Qiitaでの技術発信も積極的に行う。</p>
-          </div>
-          <div class="member-card">
-            <h4>加古 晴也</h4>
-            <p class="member-role">環境構築・Azure/GAI関連担当 / グループ社内システム本部</p>
-            <p>2021年入社。海外拠点のOA環境クラウド化やAIチャットボット展開を担当。現在は社内全拠点におけるAI導入、生産性向上のためのツール開発を推進。</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="intro-section">
-      <div class="intro-container">
-        <h3 class="intro-section-title">取り組みのハイライト</h3>
-        <div class="highlights-list">
-          <div class="highlight-item">
-            <div class="highlight-number">1</div>
-            <div class="highlight-content">
-              <h4>LLM Dojoコミュニティの運営</h4>
-              <p>日本総研だけでなくSMBCグループ会社も参加可能なコミュニティ。情報交換やQ&A、生成AIに関する最新ニュースの発信を行っています。</p>
+    <section class="company-section company-services">
+      <div class="company-container">
+        <h3 class="section-title">サービス</h3>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-image service-image-1"></div>
+            <div class="service-content">
+              <h4>AI導入支援</h4>
+              <p>生成AIを活用した業務効率化、自動化ソリューションの企画から導入までをトータルサポート</p>
             </div>
           </div>
-          <div class="highlight-item">
-            <div class="highlight-number">2</div>
-            <div class="highlight-content">
-              <h4>安全性を重視した検証環境の構築</h4>
-              <p>金融系システムを扱う企業として、セキュリティーを含むガバナンスを意識。データ流出防止やネットワーク設計に細心の注意を払い、社員が利用しやすい検証環境を実現。</p>
-            </div>
-          </div>
-          <div class="highlight-item">
-            <div class="highlight-number">3</div>
-            <div class="highlight-content">
-              <h4>実践的なハンズオン講習会</h4>
-              <p>APIライブラリの使い方を学ぶ対面講習会を実施。参加者からは「思ったより簡単だった」という声が多数。サンプルスクリプトを部内に持ち帰り、業務活用を提案するケースも。</p>
-            </div>
-          </div>
-          <div class="highlight-item">
-            <div class="highlight-number">4</div>
-            <div class="highlight-content">
-              <h4>レガシーシステムのモダナイゼーション</h4>
-              <p>ClassicASPからJavaへの変換など、レガシー技術から新しいフレームワークへの変換をAIで支援。Microsoft AI Co-Innovation Labでの検証も実施。</p>
+          <div class="service-card">
+            <div class="service-image service-image-2"></div>
+            <div class="service-content">
+              <h4>DXコンサルティング</h4>
+              <p>デジタル戦略の策定から実行まで、お客様のDX推進を包括的に支援</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="intro-cta">
-      <div class="intro-container">
-        <h3>生成AI活用の未来を一緒に創りませんか？</h3>
-        <p>LLM-CoEでは、生成AI利活用推進スタッフとして一緒に働く仲間を募集しています。</p>
-        <div class="cta-buttons">
-          <a href="https://qiita.com/official-columns/interview/202412-jri/" target="_blank" class="btn-primary">記事を読む</a>
-          <a href="https://jri-career.com/career/" target="_blank" class="btn-secondary">採用情報</a>
+    <section class="company-section company-numbers">
+      <div class="company-container">
+        <h3 class="section-title">数字で見る私たち</h3>
+        <div class="numbers-grid">
+          <div class="number-item">
+            <span class="number-value">500+</span>
+            <span class="number-label">プロジェクト実績</span>
+          </div>
+          <div class="number-item">
+            <span class="number-value">98%</span>
+            <span class="number-label">顧客満足度</span>
+          </div>
+          <div class="number-item">
+            <span class="number-value">150+</span>
+            <span class="number-label">専門スタッフ</span>
+          </div>
+          <div class="number-item">
+            <span class="number-value">10+</span>
+            <span class="number-label">年の実績</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <footer class="intro-footer">
-      <p>出典: <a href="https://qiita.com/official-columns/interview/202412-jri/" target="_blank">Qiita Zine - LLM活用をリードする、日本総研のバーチャル組織「LLM-CoE」とは</a></p>
-      <p>2024年12月6日公開</p>
-    </footer>
+    <section class="company-section company-cta">
+      <div class="company-container">
+        <h3>お気軽にご相談ください</h3>
+        <p>AI活用やDX推進についてのご相談を承っております</p>
+        <button class="cta-button" (click)="currentView = 'contact'; resetContactForm()">相談窓口へ</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Contact Form Page -->
+  <div class="contact-page" *ngIf="currentView === 'contact'">
+    <section class="contact-hero">
+      <div class="contact-hero-content">
+        <h2>相談窓口</h2>
+        <p class="contact-subtitle">生成AI活用に関するご相談を受け付けています</p>
+      </div>
+    </section>
+
+    <section class="contact-section" *ngIf="!formSubmitted">
+      <div class="contact-container">
+        <div class="contact-info">
+          <h3>ご相談について</h3>
+          <p>生成AI活用に関する企画段階からのご相談に対応しています。お気軽にお問い合わせください。</p>
+          <ul class="contact-features">
+            <li>企画段階からの相談対応</li>
+            <li>技術的なアドバイス</li>
+            <li>PoC支援の検討</li>
+            <li>適切な部署への橋渡し</li>
+          </ul>
+        </div>
+
+        <form class="contact-form" (ngSubmit)="submitContactForm()">
+          <div class="form-error" *ngIf="formError">{{formError}}</div>
+          
+          <div class="form-group">
+            <label for="name">氏名 <span class="required">*</span></label>
+            <input type="text" id="name" [(ngModel)]="contactForm.name" name="name" placeholder="山田 太郎">
+          </div>
+
+          <div class="form-group">
+            <label for="department">部署 <span class="required">*</span></label>
+            <input type="text" id="department" [(ngModel)]="contactForm.department" name="department" placeholder="システム開発部">
+          </div>
+
+          <div class="form-group">
+            <label for="email">メールアドレス <span class="required">*</span></label>
+            <input type="email" id="email" [(ngModel)]="contactForm.email" name="email" placeholder="yamada@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="consultationType">相談種別 <span class="required">*</span></label>
+            <select id="consultationType" [(ngModel)]="contactForm.consultationType" name="consultationType">
+              <option value="">選択してください</option>
+              <option value="planning">企画相談</option>
+              <option value="technical">技術相談</option>
+              <option value="poc">PoC支援依頼</option>
+              <option value="training">研修・育成相談</option>
+              <option value="other">その他</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="content">相談内容 <span class="required">*</span></label>
+            <textarea id="content" [(ngModel)]="contactForm.content" name="content" rows="6" placeholder="ご相談内容をご記入ください"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">送信する</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="contact-section contact-success" *ngIf="formSubmitted">
+      <div class="contact-container">
+        <div class="success-content">
+          <div class="success-icon">&#10003;</div>
+          <h3>送信完了</h3>
+          <p>お問い合わせありがとうございます。<br>担当者より折り返しご連絡いたします。</p>
+          <div class="submitted-info">
+            <h4>送信内容</h4>
+            <dl>
+              <dt>氏名</dt>
+              <dd>{{contactForm.name}}</dd>
+              <dt>部署</dt>
+              <dd>{{contactForm.department}}</dd>
+              <dt>メールアドレス</dt>
+              <dd>{{contactForm.email}}</dd>
+              <dt>相談種別</dt>
+              <dd>{{contactForm.consultationType === 'planning' ? '企画相談' : contactForm.consultationType === 'technical' ? '技術相談' : contactForm.consultationType === 'poc' ? 'PoC支援依頼' : contactForm.consultationType === 'training' ? '研修・育成相談' : 'その他'}}</dd>
+              <dt>相談内容</dt>
+              <dd>{{contactForm.content}}</dd>
+            </dl>
+          </div>
+          <button class="btn-back" (click)="resetContactForm()">新しい相談を送信</button>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
 
