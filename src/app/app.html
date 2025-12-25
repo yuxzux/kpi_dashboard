@@ -2,6 +2,7 @@
   <header class="header">
     <h1>KPI ダッシュボード</h1>
     <p class="subtitle">AI活用状況・人材育成進捗レポート</p>
+    <button class="data-manage-btn" (click)="openDataModal()">データ管理</button>
   </header>
 
   <div class="dashboard-grid">
@@ -51,55 +52,94 @@
       </div>
       <div class="card-content">
         <div class="sub-section">
-          <h3>案件数比較（PoC vs 本番）</h3>
-          <div class="comparison-grid">
-            <div class="comparison-item">
-              <h4>PoC</h4>
-              <ngx-charts-pie-chart
-                [results]="aiSupportPocData"
-                [scheme]="colorScheme"
-                [legend]="true"
-                [labels]="true"
-                [doughnut]="true"
-                [view]="[240, 200]">
-              </ngx-charts-pie-chart>
-              <div class="stats">
-                <span class="stat-item">受託: 15件</span>
-                <span class="stat-item">全量: 45件</span>
+          <h3>案件数比較（受託 vs 全量）</h3>
+          <div class="ai-support-cards">
+            <div class="ai-support-card">
+              <div class="ai-support-card-header">PoC</div>
+              <div class="ai-support-card-body">
+                <div class="progress-bar-container">
+                  <div class="progress-bar-label">
+                    <span>受託案件</span>
+                    <span class="progress-value">{{editData.aiSupport.poc.contracted}}件</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill" [style.width.%]="getPocContractedRatio()"></div>
+                  </div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-label">
+                    <span>全量案件</span>
+                    <span class="progress-value">{{editData.aiSupport.poc.total}}件</span>
+                  </div>
+                  <div class="progress-bar-track full">
+                    <div class="progress-bar-fill-light" style="width: 100%"></div>
+                  </div>
+                </div>
+                <div class="ratio-display">
+                  <span class="ratio-label">受託率</span>
+                  <span class="ratio-value">{{getPocContractedRatio()}}%</span>
+                </div>
               </div>
             </div>
-            <div class="comparison-item">
-              <h4>本番</h4>
-              <ngx-charts-pie-chart
-                [results]="aiSupportProductionData"
-                [scheme]="colorScheme"
-                [legend]="true"
-                [labels]="true"
-                [doughnut]="true"
-                [view]="[240, 200]">
-              </ngx-charts-pie-chart>
-              <div class="stats">
-                <span class="stat-item">受託: 8件</span>
-                <span class="stat-item">全量: 28件</span>
+            <div class="ai-support-card">
+              <div class="ai-support-card-header">本番</div>
+              <div class="ai-support-card-body">
+                <div class="progress-bar-container">
+                  <div class="progress-bar-label">
+                    <span>受託案件</span>
+                    <span class="progress-value">{{editData.aiSupport.production.contracted}}件</span>
+                  </div>
+                  <div class="progress-bar-track">
+                    <div class="progress-bar-fill" [style.width.%]="getProductionContractedRatio()"></div>
+                  </div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar-label">
+                    <span>全量案件</span>
+                    <span class="progress-value">{{editData.aiSupport.production.total}}件</span>
+                  </div>
+                  <div class="progress-bar-track full">
+                    <div class="progress-bar-fill-light" style="width: 100%"></div>
+                  </div>
+                </div>
+                <div class="ratio-display">
+                  <span class="ratio-label">受託率</span>
+                  <span class="ratio-value">{{getProductionContractedRatio()}}%</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="sub-section">
           <h3>発注金額比較</h3>
-          <ngx-charts-bar-vertical-2d
-            [results]="aiSupportAmountData"
-            [scheme]="colorScheme"
-            [xAxis]="true"
-            [yAxis]="true"
-            [legend]="true"
-            [showXAxisLabel]="true"
-            [showYAxisLabel]="true"
-            xAxisLabel="フェーズ"
-            yAxisLabel="金額"
-            [yAxisTickFormatting]="yAxisTickFormatting"
-            [view]="[500, 250]">
-          </ngx-charts-bar-vertical-2d>
+          <div class="amount-comparison">
+            <div class="amount-table">
+              <div class="amount-row header">
+                <div class="amount-cell"></div>
+                <div class="amount-cell">受託金額</div>
+                <div class="amount-cell">全量金額</div>
+                <div class="amount-cell">受託率</div>
+              </div>
+              <div class="amount-row">
+                <div class="amount-cell label">PoC</div>
+                <div class="amount-cell value">{{formatYen(editData.aiSupport.amount.poc.contracted)}}</div>
+                <div class="amount-cell value">{{formatYen(editData.aiSupport.amount.poc.total)}}</div>
+                <div class="amount-cell ratio">{{getPocAmountRatio()}}%</div>
+              </div>
+              <div class="amount-row">
+                <div class="amount-cell label">本番</div>
+                <div class="amount-cell value">{{formatYen(editData.aiSupport.amount.production.contracted)}}</div>
+                <div class="amount-cell value">{{formatYen(editData.aiSupport.amount.production.total)}}</div>
+                <div class="amount-cell ratio">{{getProductionAmountRatio()}}%</div>
+              </div>
+              <div class="amount-row total">
+                <div class="amount-cell label">合計</div>
+                <div class="amount-cell value">{{formatYen(getTotalContractedAmount())}}</div>
+                <div class="amount-cell value">{{formatYen(getTotalAmount())}}</div>
+                <div class="amount-cell ratio">{{getTotalAmountRatio()}}%</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -112,15 +152,15 @@
       <div class="card-content">
         <div class="metrics-row">
           <div class="metric-card">
-            <div class="metric-value">12</div>
+            <div class="metric-value">{{editData.learningEnv.departments}}</div>
             <div class="metric-label">利用部署数</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value">245</div>
+            <div class="metric-value">{{editData.learningEnv.users}}</div>
             <div class="metric-label">登録者数</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value">2,350万円</div>
+            <div class="metric-value">{{formatYen(editData.learningEnv.totalCost)}}</div>
             <div class="metric-label">累計利用金額</div>
           </div>
         </div>
@@ -149,64 +189,48 @@
         <h2>人材育成進捗状況</h2>
       </div>
       <div class="card-content">
-        <div class="progress-grid">
-          <div class="progress-item">
-            <h3>見習い認定</h3>
-            <div class="progress-circle">
-              <ngx-charts-gauge
-                [results]="apprenticeGaugeData"
-                [scheme]="colorScheme"
-                [min]="0"
-                [max]="100"
-                [angleSpan]="240"
-                [startAngle]="-120"
-                [units]="'%'"
-                [bigSegments]="5"
-                [view]="[220, 180]">
-              </ngx-charts-gauge>
+        <div class="hr-progress-grid">
+          <div class="hr-progress-card">
+            <div class="hr-progress-header">
+              <h3>見習い認定</h3>
+              <div class="hr-progress-percentage">{{apprenticeData.percentage}}%</div>
             </div>
-            <div class="progress-stats">
-              <div class="stat-row">
-                <span class="stat-label">認定者数</span>
-                <span class="stat-value">85名</span>
+            <div class="hr-progress-bar-wrapper">
+              <div class="hr-progress-bar-track">
+                <div class="hr-progress-bar-fill" [style.width.%]="apprenticeData.percentage"></div>
               </div>
-              <div class="stat-row">
-                <span class="stat-label">対象者数</span>
-                <span class="stat-value">150名</span>
+            </div>
+            <div class="hr-progress-details">
+              <div class="hr-progress-detail">
+                <span class="detail-number">{{apprenticeData.certified}}</span>
+                <span class="detail-label">認定者数</span>
               </div>
-              <div class="stat-row highlight">
-                <span class="stat-label">達成割合</span>
-                <span class="stat-value">56.7%</span>
+              <div class="hr-progress-divider">/</div>
+              <div class="hr-progress-detail">
+                <span class="detail-number">{{apprenticeData.total}}</span>
+                <span class="detail-label">対象者数</span>
               </div>
             </div>
           </div>
-          <div class="progress-item">
-            <h3>独り立ち認定</h3>
-            <div class="progress-circle">
-              <ngx-charts-gauge
-                [results]="independentGaugeData"
-                [scheme]="colorScheme"
-                [min]="0"
-                [max]="100"
-                [angleSpan]="240"
-                [startAngle]="-120"
-                [units]="'%'"
-                [bigSegments]="5"
-                [view]="[220, 180]">
-              </ngx-charts-gauge>
+          <div class="hr-progress-card">
+            <div class="hr-progress-header">
+              <h3>独り立ち認定</h3>
+              <div class="hr-progress-percentage">{{independentData.percentage}}%</div>
             </div>
-            <div class="progress-stats">
-              <div class="stat-row">
-                <span class="stat-label">認定者数</span>
-                <span class="stat-value">42名</span>
+            <div class="hr-progress-bar-wrapper">
+              <div class="hr-progress-bar-track">
+                <div class="hr-progress-bar-fill" [style.width.%]="independentData.percentage"></div>
               </div>
-              <div class="stat-row">
-                <span class="stat-label">対象者数</span>
-                <span class="stat-value">150名</span>
+            </div>
+            <div class="hr-progress-details">
+              <div class="hr-progress-detail">
+                <span class="detail-number">{{independentData.certified}}</span>
+                <span class="detail-label">認定者数</span>
               </div>
-              <div class="stat-row highlight">
-                <span class="stat-label">達成割合</span>
-                <span class="stat-value">28.0%</span>
+              <div class="hr-progress-divider">/</div>
+              <div class="hr-progress-detail">
+                <span class="detail-number">{{independentData.total}}</span>
+                <span class="detail-label">対象者数</span>
               </div>
             </div>
           </div>
@@ -218,4 +242,138 @@
   <footer class="footer">
     <p>最終更新: 2025年12月</p>
   </footer>
+</div>
+
+<!-- Data Management Modal -->
+<div class="modal-overlay" *ngIf="showDataModal" (click)="closeDataModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>データ管理</h2>
+      <button class="modal-close" (click)="closeDataModal()">&times;</button>
+    </div>
+    
+    <div class="modal-tabs">
+      <button [class.active]="activeTab === 'gai'" (click)="activeTab = 'gai'">GAI利用状況</button>
+      <button [class.active]="activeTab === 'ai'" (click)="activeTab = 'ai'">AI支援状況</button>
+      <button [class.active]="activeTab === 'learning'" (click)="activeTab = 'learning'">学習・検証環境</button>
+      <button [class.active]="activeTab === 'hr'" (click)="activeTab = 'hr'">人材育成</button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- GAI利用状況 Tab -->
+      <div *ngIf="activeTab === 'gai'" class="tab-content">
+        <h3>利用用途ごとの回数</h3>
+        <div class="form-grid">
+          <div class="form-row" *ngFor="let item of editData.gaiUsage.usagePurpose; let i = index">
+            <label>{{item.name}}</label>
+            <input type="number" [(ngModel)]="editData.gaiUsage.usagePurpose[i].value" />
+          </div>
+        </div>
+      </div>
+      
+      <!-- AI支援状況 Tab -->
+      <div *ngIf="activeTab === 'ai'" class="tab-content">
+        <h3>案件数</h3>
+        <div class="form-section">
+          <h4>PoC</h4>
+          <div class="form-row">
+            <label>受託案件数</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.poc.contracted" />
+          </div>
+          <div class="form-row">
+            <label>全量案件数</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.poc.total" />
+          </div>
+        </div>
+        <div class="form-section">
+          <h4>本番</h4>
+          <div class="form-row">
+            <label>受託案件数</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.production.contracted" />
+          </div>
+          <div class="form-row">
+            <label>全量案件数</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.production.total" />
+          </div>
+        </div>
+        <h3>発注金額（円）</h3>
+        <div class="form-section">
+          <h4>PoC</h4>
+          <div class="form-row">
+            <label>受託金額</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.amount.poc.contracted" />
+          </div>
+          <div class="form-row">
+            <label>全量金額</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.amount.poc.total" />
+          </div>
+        </div>
+        <div class="form-section">
+          <h4>本番</h4>
+          <div class="form-row">
+            <label>受託金額</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.amount.production.contracted" />
+          </div>
+          <div class="form-row">
+            <label>全量金額</label>
+            <input type="number" [(ngModel)]="editData.aiSupport.amount.production.total" />
+          </div>
+        </div>
+      </div>
+      
+      <!-- 学習・検証環境 Tab -->
+      <div *ngIf="activeTab === 'learning'" class="tab-content">
+        <h3>基本情報</h3>
+        <div class="form-row">
+          <label>利用部署数</label>
+          <input type="number" [(ngModel)]="editData.learningEnv.departments" />
+        </div>
+        <div class="form-row">
+          <label>登録者数</label>
+          <input type="number" [(ngModel)]="editData.learningEnv.users" />
+        </div>
+        <div class="form-row">
+          <label>累計利用金額（円）</label>
+          <input type="number" [(ngModel)]="editData.learningEnv.totalCost" />
+        </div>
+      </div>
+      
+      <!-- 人材育成 Tab -->
+      <div *ngIf="activeTab === 'hr'" class="tab-content">
+        <h3>見習い認定</h3>
+        <div class="form-row">
+          <label>認定者数</label>
+          <input type="number" [(ngModel)]="editData.hrDevelopment.apprentice.certified" />
+        </div>
+        <div class="form-row">
+          <label>対象者数</label>
+          <input type="number" [(ngModel)]="editData.hrDevelopment.apprentice.total" />
+        </div>
+        <h3>独り立ち認定</h3>
+        <div class="form-row">
+          <label>認定者数</label>
+          <input type="number" [(ngModel)]="editData.hrDevelopment.independent.certified" />
+        </div>
+        <div class="form-row">
+          <label>対象者数</label>
+          <input type="number" [(ngModel)]="editData.hrDevelopment.independent.total" />
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <div class="modal-actions-left">
+        <button class="btn-secondary" (click)="exportData()">エクスポート</button>
+        <label class="btn-secondary file-input-label">
+          インポート
+          <input type="file" accept=".json" (change)="importData($event)" hidden />
+        </label>
+        <button class="btn-danger" (click)="resetData()">リセット</button>
+      </div>
+      <div class="modal-actions-right">
+        <button class="btn-secondary" (click)="closeDataModal()">キャンセル</button>
+        <button class="btn-primary" (click)="saveData()">保存</button>
+      </div>
+    </div>
+  </div>
 </div>
