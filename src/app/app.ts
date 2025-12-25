@@ -37,7 +37,7 @@ interface DashboardData {
 export class App implements OnInit {
   private readonly STORAGE_KEY = 'kpi-dashboard-data';
   
-  currentView: 'dashboard' | 'company' | 'contact' = 'dashboard';
+  currentView: 'dashboard' | 'company' | 'study' | 'contact' = 'dashboard';
   isEditMode = false;
   showDataModal = false;
   activeTab = 'gai';

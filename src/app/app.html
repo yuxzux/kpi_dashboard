@@ -7,6 +7,7 @@
     <nav class="header-nav">
       <button [class.active]="currentView === 'dashboard'" (click)="currentView = 'dashboard'">ダッシュボード</button>
       <button [class.active]="currentView === 'company'" (click)="currentView = 'company'">会社紹介</button>
+      <button [class.active]="currentView === 'study'" (click)="currentView = 'study'">勉強会コンテンツ</button>
       <button [class.active]="currentView === 'contact'" (click)="currentView = 'contact'; resetContactForm()">相談窓口</button>
     </nav>
     <button class="data-manage-btn" (click)="openDataModal()" *ngIf="currentView === 'dashboard'">データ管理</button>
@@ -368,6 +369,147 @@
       <div class="company-container">
         <h3>お気軽にご相談ください</h3>
         <p>AI活用やDX推進についてのご相談を承っております</p>
+        <button class="cta-button" (click)="currentView = 'contact'; resetContactForm()">相談窓口へ</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Study Content Page -->
+  <div class="study-page" *ngIf="currentView === 'study'">
+    <section class="study-hero">
+      <div class="study-hero-content">
+        <h2>AI勉強会コンテンツ</h2>
+        <p class="study-subtitle">生成AI活用のための学習コンテンツをご用意しています</p>
+      </div>
+    </section>
+
+    <section class="study-section">
+      <div class="study-container">
+        <h3 class="study-section-title">入門編</h3>
+        <p class="study-section-desc">生成AIの基礎知識と活用方法を学びます</p>
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="生成AI入門 - 基礎概念と仕組み"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-info">
+              <h4>生成AI入門 - 基礎概念と仕組み</h4>
+              <p class="video-meta">約30分 | 初級</p>
+              <p class="video-desc">生成AIとは何か、その仕組みと可能性について解説します</p>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="プロンプトエンジニアリング基礎"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-info">
+              <h4>プロンプトエンジニアリング基礎</h4>
+              <p class="video-meta">約45分 | 初級</p>
+              <p class="video-desc">効果的なプロンプトの書き方と基本テクニックを学びます</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section study-section-alt">
+      <div class="study-container">
+        <h3 class="study-section-title">実践編</h3>
+        <p class="study-section-desc">業務での具体的な活用方法を学びます</p>
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="業務効率化のためのAI活用"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-info">
+              <h4>業務効率化のためのAI活用</h4>
+              <p class="video-meta">約60分 | 中級</p>
+              <p class="video-desc">文書作成、データ分析、コード生成など実務での活用事例を紹介</p>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="AIツール比較と選定ガイド"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-info">
+              <h4>AIツール比較と選定ガイド</h4>
+              <p class="video-meta">約40分 | 中級</p>
+              <p class="video-desc">主要なAIツールの特徴と用途に応じた選び方を解説</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section">
+      <div class="study-container">
+        <h3 class="study-section-title">応用編</h3>
+        <p class="study-section-desc">より高度な活用方法とシステム連携を学びます</p>
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="API連携とシステム統合"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-info">
+              <h4>API連携とシステム統合</h4>
+              <p class="video-meta">約90分 | 上級</p>
+              <p class="video-desc">生成AIをシステムに組み込む方法とベストプラクティス</p>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe 
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                title="セキュリティとガバナンス"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="video-info">
+              <h4>セキュリティとガバナンス</h4>
+              <p class="video-meta">約50分 | 上級</p>
+              <p class="video-desc">企業でのAI利用におけるセキュリティ対策とルール策定</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section study-cta">
+      <div class="study-container">
+        <h3>個別の研修・勉強会のご相談</h3>
+        <p>部署やチーム向けのカスタマイズ研修も承っております</p>
         <button class="cta-button" (click)="currentView = 'contact'; resetContactForm()">相談窓口へ</button>
       </div>
     </section>
