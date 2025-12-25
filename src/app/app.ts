@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 
+interface User {
+  username: string;
+  role: 'admin' | 'user';
+}
+
 interface DashboardData {
   gaiUsage: {
     coreUsers: { department: string; months: { month: string; value: number }[] }[];
@@ -36,8 +41,24 @@ interface DashboardData {
 })
 export class App implements OnInit {
   private readonly STORAGE_KEY = 'kpi-dashboard-data';
+  private readonly AUTH_KEY = 'kpi-dashboard-auth';
   
-  currentView: 'dashboard' | 'company' | 'study' | 'contact' = 'dashboard';
+  // Login state
+  isLoggedIn = false;
+  currentUser: User | null = null;
+  loginForm = {
+    username: '',
+    password: ''
+  };
+  loginError = '';
+  
+  // Sample users (in real app, this would be server-side)
+  private readonly users = [
+    { username: 'admin', password: 'admin123', role: 'admin' as const },
+    { username: 'user', password: 'user123', role: 'user' as const }
+  ];
+  
+  currentView: 'dashboard' | 'company' | 'study' | 'data' | 'contact' = 'dashboard';
   isEditMode = false;
   showDataModal = false;
   activeTab = 'gai';
@@ -199,9 +220,50 @@ export class App implements OnInit {
     return value.toString();
   };
 
-  ngOnInit(): void {
-    this.loadData();
-  }
+    ngOnInit(): void {
+      this.checkAuth();
+      this.loadData();
+    }
+
+    checkAuth(): void {
+      const savedAuth = localStorage.getItem(this.AUTH_KEY);
+      if (savedAuth) {
+        try {
+          const user = JSON.parse(savedAuth);
+          this.currentUser = user;
+          this.isLoggedIn = true;
+        } catch {
+          this.logout();
+        }
+      }
+    }
+
+    login(): void {
+      this.loginError = '';
+      const user = this.users.find(
+        u => u.username === this.loginForm.username && u.password === this.loginForm.password
+      );
+    
+      if (user) {
+        this.currentUser = { username: user.username, role: user.role };
+        this.isLoggedIn = true;
+        localStorage.setItem(this.AUTH_KEY, JSON.stringify(this.currentUser));
+        this.loginForm = { username: '', password: '' };
+      } else {
+        this.loginError = 'ユーザー名またはパスワードが正しくありません';
+      }
+    }
+
+    logout(): void {
+      this.currentUser = null;
+      this.isLoggedIn = false;
+      localStorage.removeItem(this.AUTH_KEY);
+      this.currentView = 'dashboard';
+    }
+
+    isAdmin(): boolean {
+      return this.currentUser?.role === 'admin';
+    }
 
   getDefaultData(): DashboardData {
     return {

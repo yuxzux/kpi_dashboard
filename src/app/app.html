@@ -1,16 +1,49 @@
-<div class="dashboard">
+<!-- Login Screen -->
+<div class="login-container" *ngIf="!isLoggedIn">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>KPI ダッシュボード</h1>
+      <p>ログインしてください</p>
+    </div>
+    <form class="login-form" (ngSubmit)="login()">
+      <div class="form-group">
+        <label for="username">ユーザー名</label>
+        <input type="text" id="username" [(ngModel)]="loginForm.username" name="username" placeholder="ユーザー名を入力" />
+      </div>
+      <div class="form-group">
+        <label for="password">パスワード</label>
+        <input type="password" id="password" [(ngModel)]="loginForm.password" name="password" placeholder="パスワードを入力" />
+      </div>
+      <div class="login-error" *ngIf="loginError">{{loginError}}</div>
+      <button type="submit" class="login-btn">ログイン</button>
+    </form>
+    <div class="login-hint">
+      <p>サンプルアカウント:</p>
+      <p>管理者: admin / admin123</p>
+      <p>一般ユーザー: user / user123</p>
+    </div>
+  </div>
+</div>
+
+<!-- Main Dashboard (after login) -->
+<div class="dashboard" *ngIf="isLoggedIn">
   <header class="header">
     <div class="header-top">
       <h1>KPI ダッシュボード</h1>
       <p class="subtitle">AI活用状況・人材育成進捗レポート</p>
+      <div class="user-info">
+        <span class="user-name">{{currentUser?.username}}</span>
+        <span class="user-role" [class.admin]="isAdmin()">{{isAdmin() ? '管理者' : '一般ユーザー'}}</span>
+        <button class="logout-btn" (click)="logout()">ログアウト</button>
+      </div>
     </div>
     <nav class="header-nav">
       <button [class.active]="currentView === 'dashboard'" (click)="currentView = 'dashboard'">ダッシュボード</button>
       <button [class.active]="currentView === 'company'" (click)="currentView = 'company'">会社紹介</button>
       <button [class.active]="currentView === 'study'" (click)="currentView = 'study'">勉強会コンテンツ</button>
+      <button *ngIf="isAdmin()" [class.active]="currentView === 'data'" (click)="currentView = 'data'">データ管理</button>
       <button [class.active]="currentView === 'contact'" (click)="currentView = 'contact'; resetContactForm()">相談窓口</button>
     </nav>
-    <button class="data-manage-btn" (click)="openDataModal()" *ngIf="currentView === 'dashboard'">データ管理</button>
   </header>
 
   <div class="dashboard-grid" *ngIf="currentView === 'dashboard'">
@@ -515,6 +548,143 @@
     </section>
   </div>
 
+  <!-- Data Management Page -->
+  <div class="data-page" *ngIf="currentView === 'data'">
+    <section class="data-hero">
+      <div class="data-hero-content">
+        <h2>データ管理</h2>
+        <p class="data-subtitle">ダッシュボードのデータを編集・管理します</p>
+      </div>
+    </section>
+
+    <section class="data-section">
+      <div class="data-container">
+        <div class="data-tabs">
+          <button [class.active]="activeTab === 'gai'" (click)="activeTab = 'gai'">GAI利用状況</button>
+          <button [class.active]="activeTab === 'ai'" (click)="activeTab = 'ai'">AI支援状況</button>
+          <button [class.active]="activeTab === 'learning'" (click)="activeTab = 'learning'">学習・検証環境</button>
+          <button [class.active]="activeTab === 'hr'" (click)="activeTab = 'hr'">人材育成</button>
+        </div>
+
+        <div class="data-content">
+          <!-- GAI利用状況 Tab -->
+          <div *ngIf="activeTab === 'gai'" class="tab-content">
+            <h3>利用用途ごとの回数</h3>
+            <div class="form-grid">
+              <div class="form-row" *ngFor="let item of editData.gaiUsage.usagePurpose; let i = index">
+                <label>{{item.name}}</label>
+                <input type="number" [(ngModel)]="editData.gaiUsage.usagePurpose[i].value" />
+              </div>
+            </div>
+          </div>
+          
+          <!-- AI支援状況 Tab -->
+          <div *ngIf="activeTab === 'ai'" class="tab-content">
+            <h3>案件数</h3>
+            <div class="form-section">
+              <h4>PoC</h4>
+              <div class="form-row">
+                <label>受託案件数</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.poc.contracted" />
+              </div>
+              <div class="form-row">
+                <label>全量案件数</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.poc.total" />
+              </div>
+            </div>
+            <div class="form-section">
+              <h4>本番</h4>
+              <div class="form-row">
+                <label>受託案件数</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.production.contracted" />
+              </div>
+              <div class="form-row">
+                <label>全量案件数</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.production.total" />
+              </div>
+            </div>
+            <h3>発注金額（円）</h3>
+            <div class="form-section">
+              <h4>PoC</h4>
+              <div class="form-row">
+                <label>受託金額</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.amount.poc.contracted" />
+              </div>
+              <div class="form-row">
+                <label>全量金額</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.amount.poc.total" />
+              </div>
+            </div>
+            <div class="form-section">
+              <h4>本番</h4>
+              <div class="form-row">
+                <label>受託金額</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.amount.production.contracted" />
+              </div>
+              <div class="form-row">
+                <label>全量金額</label>
+                <input type="number" [(ngModel)]="editData.aiSupport.amount.production.total" />
+              </div>
+            </div>
+          </div>
+          
+          <!-- 学習・検証環境 Tab -->
+          <div *ngIf="activeTab === 'learning'" class="tab-content">
+            <h3>基本情報</h3>
+            <div class="form-row">
+              <label>利用部署数</label>
+              <input type="number" [(ngModel)]="editData.learningEnv.departments" />
+            </div>
+            <div class="form-row">
+              <label>登録者数</label>
+              <input type="number" [(ngModel)]="editData.learningEnv.users" />
+            </div>
+            <div class="form-row">
+              <label>累計利用金額（円）</label>
+              <input type="number" [(ngModel)]="editData.learningEnv.totalCost" />
+            </div>
+          </div>
+          
+          <!-- 人材育成 Tab -->
+          <div *ngIf="activeTab === 'hr'" class="tab-content">
+            <h3>見習い認定</h3>
+            <div class="form-row">
+              <label>認定者数</label>
+              <input type="number" [(ngModel)]="editData.hrDevelopment.apprentice.certified" />
+            </div>
+            <div class="form-row">
+              <label>対象者数</label>
+              <input type="number" [(ngModel)]="editData.hrDevelopment.apprentice.total" />
+            </div>
+            <h3>独り立ち認定</h3>
+            <div class="form-row">
+              <label>認定者数</label>
+              <input type="number" [(ngModel)]="editData.hrDevelopment.independent.certified" />
+            </div>
+            <div class="form-row">
+              <label>対象者数</label>
+              <input type="number" [(ngModel)]="editData.hrDevelopment.independent.total" />
+            </div>
+          </div>
+        </div>
+
+        <div class="data-actions">
+          <div class="data-actions-left">
+            <button class="btn-secondary" (click)="exportData()">エクスポート</button>
+            <label class="btn-secondary file-input-label">
+              インポート
+              <input type="file" accept=".json" (change)="importData($event)" hidden />
+            </label>
+            <button class="btn-danger" (click)="resetData()">リセット</button>
+          </div>
+          <div class="data-actions-right">
+            <button class="btn-primary" (click)="saveData()">保存</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <!-- Contact Form Page -->
   <div class="contact-page" *ngIf="currentView === 'contact'">
     <section class="contact-hero">
@@ -604,139 +774,5 @@
         </div>
       </div>
     </section>
-  </div>
-</div>
-
-<!-- Data Management Modal -->
-<div class="modal-overlay" *ngIf="showDataModal" (click)="closeDataModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>データ管理</h2>
-      <button class="modal-close" (click)="closeDataModal()">&times;</button>
-    </div>
-    
-    <div class="modal-tabs">
-      <button [class.active]="activeTab === 'gai'" (click)="activeTab = 'gai'">GAI利用状況</button>
-      <button [class.active]="activeTab === 'ai'" (click)="activeTab = 'ai'">AI支援状況</button>
-      <button [class.active]="activeTab === 'learning'" (click)="activeTab = 'learning'">学習・検証環境</button>
-      <button [class.active]="activeTab === 'hr'" (click)="activeTab = 'hr'">人材育成</button>
-    </div>
-    
-    <div class="modal-body">
-      <!-- GAI利用状況 Tab -->
-      <div *ngIf="activeTab === 'gai'" class="tab-content">
-        <h3>利用用途ごとの回数</h3>
-        <div class="form-grid">
-          <div class="form-row" *ngFor="let item of editData.gaiUsage.usagePurpose; let i = index">
-            <label>{{item.name}}</label>
-            <input type="number" [(ngModel)]="editData.gaiUsage.usagePurpose[i].value" />
-          </div>
-        </div>
-      </div>
-      
-      <!-- AI支援状況 Tab -->
-      <div *ngIf="activeTab === 'ai'" class="tab-content">
-        <h3>案件数</h3>
-        <div class="form-section">
-          <h4>PoC</h4>
-          <div class="form-row">
-            <label>受託案件数</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.poc.contracted" />
-          </div>
-          <div class="form-row">
-            <label>全量案件数</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.poc.total" />
-          </div>
-        </div>
-        <div class="form-section">
-          <h4>本番</h4>
-          <div class="form-row">
-            <label>受託案件数</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.production.contracted" />
-          </div>
-          <div class="form-row">
-            <label>全量案件数</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.production.total" />
-          </div>
-        </div>
-        <h3>発注金額（円）</h3>
-        <div class="form-section">
-          <h4>PoC</h4>
-          <div class="form-row">
-            <label>受託金額</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.amount.poc.contracted" />
-          </div>
-          <div class="form-row">
-            <label>全量金額</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.amount.poc.total" />
-          </div>
-        </div>
-        <div class="form-section">
-          <h4>本番</h4>
-          <div class="form-row">
-            <label>受託金額</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.amount.production.contracted" />
-          </div>
-          <div class="form-row">
-            <label>全量金額</label>
-            <input type="number" [(ngModel)]="editData.aiSupport.amount.production.total" />
-          </div>
-        </div>
-      </div>
-      
-      <!-- 学習・検証環境 Tab -->
-      <div *ngIf="activeTab === 'learning'" class="tab-content">
-        <h3>基本情報</h3>
-        <div class="form-row">
-          <label>利用部署数</label>
-          <input type="number" [(ngModel)]="editData.learningEnv.departments" />
-        </div>
-        <div class="form-row">
-          <label>登録者数</label>
-          <input type="number" [(ngModel)]="editData.learningEnv.users" />
-        </div>
-        <div class="form-row">
-          <label>累計利用金額（円）</label>
-          <input type="number" [(ngModel)]="editData.learningEnv.totalCost" />
-        </div>
-      </div>
-      
-      <!-- 人材育成 Tab -->
-      <div *ngIf="activeTab === 'hr'" class="tab-content">
-        <h3>見習い認定</h3>
-        <div class="form-row">
-          <label>認定者数</label>
-          <input type="number" [(ngModel)]="editData.hrDevelopment.apprentice.certified" />
-        </div>
-        <div class="form-row">
-          <label>対象者数</label>
-          <input type="number" [(ngModel)]="editData.hrDevelopment.apprentice.total" />
-        </div>
-        <h3>独り立ち認定</h3>
-        <div class="form-row">
-          <label>認定者数</label>
-          <input type="number" [(ngModel)]="editData.hrDevelopment.independent.certified" />
-        </div>
-        <div class="form-row">
-          <label>対象者数</label>
-          <input type="number" [(ngModel)]="editData.hrDevelopment.independent.total" />
-        </div>
-      </div>
-    </div>
-    
-    <div class="modal-footer">
-      <div class="modal-actions-left">
-        <button class="btn-secondary" (click)="exportData()">エクスポート</button>
-        <label class="btn-secondary file-input-label">
-          インポート
-          <input type="file" accept=".json" (change)="importData($event)" hidden />
-        </label>
-        <button class="btn-danger" (click)="resetData()">リセット</button>
-      </div>
-      <div class="modal-actions-right">
-        <button class="btn-secondary" (click)="closeDataModal()">キャンセル</button>
-        <button class="btn-primary" (click)="saveData()">保存</button>
-      </div>
-    </div>
   </div>
 </div>
