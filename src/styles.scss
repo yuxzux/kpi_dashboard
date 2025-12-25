@@ -1,0 +1,35 @@
+:root {
+  --primary-color: rgb(0, 114, 206);
+  --primary-dark: rgb(0, 85, 155);
+  --primary-light: rgb(51, 143, 218);
+  --primary-lighter: rgb(102, 171, 229);
+  --primary-lightest: rgb(230, 242, 250);
+  --secondary-color: rgb(0, 80, 145);
+  --accent-color: rgb(255, 152, 0);
+  --success-color: rgb(76, 175, 80);
+  --warning-color: rgb(255, 193, 7);
+  --danger-color: rgb(244, 67, 54);
+  --text-primary: rgb(33, 33, 33);
+  --text-secondary: rgb(117, 117, 117);
+  --background-color: rgb(245, 247, 250);
+  --card-background: rgb(255, 255, 255);
+  --border-color: rgb(224, 224, 224);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}

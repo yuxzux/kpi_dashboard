@@ -1,0 +1,221 @@
+<div class="dashboard">
+  <header class="header">
+    <h1>KPI ダッシュボード</h1>
+    <p class="subtitle">AI活用状況・人材育成進捗レポート</p>
+  </header>
+
+  <div class="dashboard-grid">
+    <!-- Section 1: GAI利用状況 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>GAI利用状況</h2>
+      </div>
+      <div class="card-content">
+        <div class="chart-container">
+          <h3>コアユーザ数の月別推移（3部署）</h3>
+          <ngx-charts-line-chart
+            [results]="coreUserData"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [legend]="true"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            xAxisLabel="月"
+            yAxisLabel="ユーザ数"
+            [autoScale]="true"
+            [view]="[500, 280]">
+          </ngx-charts-line-chart>
+        </div>
+        <div class="chart-container">
+          <h3>利用用途ごとの回数</h3>
+          <ngx-charts-bar-horizontal
+            [results]="usagePurposeData"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            xAxisLabel="回数"
+            yAxisLabel="用途"
+            [view]="[500, 280]">
+          </ngx-charts-bar-horizontal>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: AI支援状況 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>AI支援状況</h2>
+      </div>
+      <div class="card-content">
+        <div class="sub-section">
+          <h3>案件数比較（PoC vs 本番）</h3>
+          <div class="comparison-grid">
+            <div class="comparison-item">
+              <h4>PoC</h4>
+              <ngx-charts-pie-chart
+                [results]="aiSupportPocData"
+                [scheme]="colorScheme"
+                [legend]="true"
+                [labels]="true"
+                [doughnut]="true"
+                [view]="[240, 200]">
+              </ngx-charts-pie-chart>
+              <div class="stats">
+                <span class="stat-item">受託: 15件</span>
+                <span class="stat-item">全量: 45件</span>
+              </div>
+            </div>
+            <div class="comparison-item">
+              <h4>本番</h4>
+              <ngx-charts-pie-chart
+                [results]="aiSupportProductionData"
+                [scheme]="colorScheme"
+                [legend]="true"
+                [labels]="true"
+                [doughnut]="true"
+                [view]="[240, 200]">
+              </ngx-charts-pie-chart>
+              <div class="stats">
+                <span class="stat-item">受託: 8件</span>
+                <span class="stat-item">全量: 28件</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sub-section">
+          <h3>発注金額比較</h3>
+          <ngx-charts-bar-vertical-2d
+            [results]="aiSupportAmountData"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [legend]="true"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            xAxisLabel="フェーズ"
+            yAxisLabel="金額"
+            [yAxisTickFormatting]="yAxisTickFormatting"
+            [view]="[500, 250]">
+          </ngx-charts-bar-vertical-2d>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: 学習・検証環境の利用状況 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>学習・検証環境の利用状況</h2>
+      </div>
+      <div class="card-content">
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-value">12</div>
+            <div class="metric-label">利用部署数</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">245</div>
+            <div class="metric-label">登録者数</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">2,350万円</div>
+            <div class="metric-label">累計利用金額</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <h3>月別利用金額推移</h3>
+          <ngx-charts-area-chart
+            [results]="[{name: '利用金額', series: learningEnvCostData}]"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            xAxisLabel="月"
+            yAxisLabel="金額"
+            [yAxisTickFormatting]="yAxisTickFormatting"
+            [autoScale]="true"
+            [view]="[500, 250]">
+          </ngx-charts-area-chart>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: 人材育成進捗状況 -->
+    <section class="card">
+      <div class="card-header">
+        <h2>人材育成進捗状況</h2>
+      </div>
+      <div class="card-content">
+        <div class="progress-grid">
+          <div class="progress-item">
+            <h3>見習い認定</h3>
+            <div class="progress-circle">
+              <ngx-charts-gauge
+                [results]="apprenticeGaugeData"
+                [scheme]="colorScheme"
+                [min]="0"
+                [max]="100"
+                [angleSpan]="240"
+                [startAngle]="-120"
+                [units]="'%'"
+                [bigSegments]="5"
+                [view]="[220, 180]">
+              </ngx-charts-gauge>
+            </div>
+            <div class="progress-stats">
+              <div class="stat-row">
+                <span class="stat-label">認定者数</span>
+                <span class="stat-value">85名</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">対象者数</span>
+                <span class="stat-value">150名</span>
+              </div>
+              <div class="stat-row highlight">
+                <span class="stat-label">達成割合</span>
+                <span class="stat-value">56.7%</span>
+              </div>
+            </div>
+          </div>
+          <div class="progress-item">
+            <h3>独り立ち認定</h3>
+            <div class="progress-circle">
+              <ngx-charts-gauge
+                [results]="independentGaugeData"
+                [scheme]="colorScheme"
+                [min]="0"
+                [max]="100"
+                [angleSpan]="240"
+                [startAngle]="-120"
+                [units]="'%'"
+                [bigSegments]="5"
+                [view]="[220, 180]">
+              </ngx-charts-gauge>
+            </div>
+            <div class="progress-stats">
+              <div class="stat-row">
+                <span class="stat-label">認定者数</span>
+                <span class="stat-value">42名</span>
+              </div>
+              <div class="stat-row">
+                <span class="stat-label">対象者数</span>
+                <span class="stat-value">150名</span>
+              </div>
+              <div class="stat-row highlight">
+                <span class="stat-label">達成割合</span>
+                <span class="stat-value">28.0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <p>最終更新: 2025年12月</p>
+  </footer>
+</div>
